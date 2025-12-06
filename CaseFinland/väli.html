@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panorama Client Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --primary: #283897;
+      --accent: #da2020;
+      --bg: #f3f4f6;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --radius-lg: 18px;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #eef2ff, #f9fafb 45%, #f3f4f6);
+      color: #111827;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+
+    /* Header / nav (shared with other pages) */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .75rem 2.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .site-header .brand svg {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 1.5rem;
+      font-size: .95rem;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #374151;
+      padding-bottom: .2rem;
+      border-bottom: 2px solid transparent;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Generic button-like links */
+    .primary,
+    .secondary {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: .55rem 1.2rem;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .secondary:hover {
+      background: #f9fafb;
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 2rem;
+      align-items: center;
+      padding: 1.8rem 1.8rem 1.6rem;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 45%, #e0ecff 100%);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.16);
+      margin-bottom: 2.3rem;
+    }
+
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1.4rem 1.3rem 1.2rem;
+      }
+    }
+
+    .hero h1 {
+      margin: 0 0 .4rem;
+      font-size: clamp(2.1rem, 3vw, 2.5rem);
+      letter-spacing: .01em;
+    }
+
+    .hero p {
+      margin: 0 0 1.2rem;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: .75rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .22rem .7rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #e5e7eb;
+    }
+
+    .hero-right {
+      justify-self: center;
+      width: 100%;
+    }
+
+    .hero-summary {
+      border-radius: 18px;
+      background: #ffffff;
+      padding: 1rem 1rem .9rem;
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.16);
+      border: 1px solid #e5e7eb;
+      font-size: .88rem;
+    }
+
+    .hero-summary h2 {
+      margin: 0 0 .7rem;
+      font-size: 1.05rem;
+    }
+
+    .hero-summary-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: .75rem;
+    }
+
+    .hero-pill {
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: .78rem;
+      border: 1px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      margin-bottom: .35rem;
+    }
+
+    .hero-summary ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: .2rem;
+    }
+
+    .hero-summary li {
+      display: flex;
+      justify-content: space-between;
+      gap: .4rem;
+      color: #4b5563;
+    }
+
+    .hero-summary-label {
+      color: var(--muted);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    section > h2 {
+      margin-bottom: .8rem;
+      font-size: 1.4rem;
+    }
+
+    section > p.section-lead {
+      margin-top: 0;
+      margin-bottom: 1.3rem;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    /* Services (Quick services) */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.2rem;
+      align-items: stretch;
+    }
+
+    .card.service {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.15rem 1.05rem;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: .6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card.service::after {
+  content: "";
+  position: absolute;
+  inset: auto -40%;
+  height: 48%;
+  top: auto;
+  bottom: -20%;
+  background: radial-gradient(circle at top, rgba(40, 56, 151, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity .18s;
+  pointer-events: none; /* ← FIX */
+    }
+
+    .card.service:hover::after {
+      opacity: 1;
+    }
+
+    .card.service h3 {
+      margin: 0 0 .2rem;
+      font-size: 1.05rem;
+    }
+
+    .card.service p {
+      margin: 0 0 .6rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .card.service .primary {
+      align-self: flex-start;
+      border-radius: 999px;
+      padding: .45rem 1.1rem;
+      font-size: .9rem;
+      border: 1px solid transparent;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .card.service .primary:hover {
+      box-shadow: 0 12px 30px rgba(40, 56, 151, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .service-eyebrow {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: #6b7280;
+      margin-bottom: .15rem;
+    }
+
+    /* My day – same visual language as other cards */
+    .my-day-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 1.4rem 1.5rem 1.3rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+      border: 1px solid #e5e7eb;
+    }
+
+    .my-day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .my-day-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .my-day-header p {
+      margin: .1rem 0 0;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .my-day-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .my-day-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .my-day-columns .column {
+      border-radius: 14px;
+      background: #f9fafb;
+      padding: .8rem .9rem .7rem;
+      border: 1px solid #e5e7eb;
+      min-height: 130px;
+    }
+
+    .my-day-columns .column h3 {
+      margin-top: 0;
+      margin-bottom: .4rem;
+      font-size: 1rem;
+    }
+/* My Day list items: align info + badge nicely */
+.my-day-columns .list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.35rem 0.15rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.my-day-columns .list li:last-child {
+  border-bottom: none;
+}
+
+.my-day-columns .list li > div:first-child strong {
+  font-size: 0.92rem;
+}
+
+.my-day-columns .list li > div:first-child span {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+/* Badges – small, pill-style, not chunky buttons */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.18rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* Green pill = OK state */
+.badge.success {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+/* Amber pill = warning / needs action */
+.badge.warning {
+  background: #fef3c7;
+  border-color: #facc15;
+  color: #92400e;
+}
+
+/* Make "Room needed" look like a real action button */
+.badge-cta {
+  text-decoration: none;
+  cursor: pointer;
+  background: #f97316;
+  border-color: #ea580c;
+  color: #ffffff;
+  padding-inline: 0.8rem;
+}
+
+.badge-cta:hover {
+  background: #ea580c;
+  border-color: #c2410c;
+}
+
+
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: .9rem;
+      color: #4b5563;
+      display: grid;
+      gap: .25rem;
+    }
+
+    .list.empty::before {
+      content: "Nothing scheduled yet.";
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: .15rem .55rem;
+      font-size: .78rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge.success {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .badge.warning {
+      background: #fef3c7;
+      border-color: #facc15;
+      color: #92400e;
+    }
+
+    .alert {
+      margin-top: .5rem;
+      padding: .45rem .55rem;
+      border-radius: 10px;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      font-size: .82rem;
+      color: #92400e;
+    }
+
+    /* Menu */
+    .menu-section > h2 {
+      margin-bottom: .2rem;
+    }
+
+    .menu-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .75rem;
+      margin-bottom: .8rem;
+      flex-wrap: wrap;
+    }
+
+    .menu-meta {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .menu-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: .85rem .9rem .8rem;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: .45rem;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    .menu-card .image {
+      height: 70px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #dbeafe, #fee2e2);
+    }
+
+    .menu-card h3 {
+      margin: 0 0 .1rem;
+      font-size: 1rem;
+    }
+
+    .menu-card p {
+      margin: 0;
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    .menu-card .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      font-size: .88rem;
+      margin-top: .3rem;
+    }
+
+    .menu-card .price {
+      font-weight: 600;
+    }
+
+    .menu-card .favourite {
+      font-size: .8rem;
+      color: #f97316;
+    }
+
+    .menu-card .pay {
+      border-radius: 999px;
+      border: 1px solid var(--primary);
+      padding: .25rem .8rem;
+      font-size: .85rem;
+      background: #ffffff;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .menu-card .pay:hover {
+      background: #eef2ff;
+    }
+
+    /* Footer */
+    .site-footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.2rem 1.5rem 2rem;
+      font-size: .8rem;
+      color: var(--muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Panorama logo -->
+  <header class="site-header">
+    <div class="brand" aria-label="PANORAMA logo">
+      <!-- Inline SVG: PAN❤RAMA (primary #283897, heart #da2020) -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" role="img" aria-label="PANORAMA">
+        <style>
+          .word { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 700; fill: #283897; }
+        </style>
+        <text class="word" x="30" y="170" font-size="160">PAN</text>
+        <g transform="translate(430, 40)">
+          <path d="M120 35c-18-27-58-27-76 0-18 27-2 64 38 94 5 4 10 8 16 12 6-4 11-8 16-12 40-30 56-67 38-94-18-27-58-27-76 0z"
+                fill="#da2020"/>
+        </g>
+        <text class="word" x="580" y="170" font-size="160">RAMA</text>
+      </svg>
+    </div>
+
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#my-day">My day</a>
+      <a href="#menu">Menu</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-label="Welcome">
+      <div>
+        <h1>Welcome to Panorama</h1>
+        <p>Book spaces, manage your day, and follow today’s menu — all in one place.</p>
+
+        <div class="hero-actions">
+          <a class="primary" href="book-room.html">Book a room</a>
+          <a class="secondary" href="#services">View all services</a>
+        </div>
+
+        <div class="hero-meta">
+          <span>✅ Quick bookings for rooms & desks</span>
+          <span>🧑‍💼 Visitor & meeting support</span>
+          <span>🥗 Daily restaurant menus</span>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-summary" aria-label="Today at a glance">
+          <h2>Today at a glance</h2>
+          <div class="hero-summary-grid">
+            <div>
+              <div class="hero-pill">My bookings</div>
+              <ul>
+                <li>
+                  <span class="hero-summary-label">Rooms</span>
+                  <span id="hero-rooms-count">–</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Desks</span>
+                  <span id="hero-desks-count">–</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Visitors</span>
+                  <span id="hero-visitors-count">–</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div class="hero-pill">Up next</div>
+              <ul>
+                <li>
+                  <span class="hero-summary-label">Next meeting</span>
+                  <span id="hero-next-meeting">No meeting</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Room</span>
+                  <span id="hero-next-meeting-room">Not assigned</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Menu</span>
+                  <span id="hero-menu-highlight">Loading...</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" aria-labelledby="services-title">
+      <h2 id="services-title">Quick services</h2>
+      <p class="section-lead">
+        Start with the most common workplace tasks. You can always come back to see your day and today’s menu.
+      </p>
+
+      <div class="card-grid">
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Spaces</div>
+            <h3>Book a room</h3>
+            <p>Find and reserve meeting rooms by capacity, equipment, and location.</p>
+          </div>
+          <button class="primary" onclick="location.href='book-room.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Spaces</div>
+            <h3>Book a desk</h3>
+            <p>Choose a desk near your team, amenities or in a quiet zone for the day.</p>
+          </div>
+          <button class="primary" onclick="location.href='book-desk.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Meetings</div>
+            <h3>Arrange a meeting</h3>
+            <p>Plan a meeting with room, visitors and services in one flow.</p>
+          </div>
+          <button class="primary" onclick="location.href='arrange-meeting.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Support</div>
+            <h3>Raise a service request</h3>
+            <p>Report a facility issue or request support from Workplace Services.</p>
+          </div>
+          <button class="primary" onclick="location.href='raise-request.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Visitors</div>
+            <h3>Register a visitor</h3>
+            <p>Pre-register guests to streamline lobby check-in and badge printing.</p>
+          </div>
+          <button class="primary" onclick="location.href='register-visitor.html'">Start</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- My Day -->
+    <section id="my-day" class="my-day-card" aria-labelledby="myday-title">
+      <div class="my-day-header">
+        <div>
+          <h2 id="myday-title">My day</h2>
+          <p>See today’s bookings, visitors and meetings in one view.</p>
+        </div>
+        <div class="my-day-filter" aria-label="Current view">
+          <span>Today</span> · <span>Office view</span>
+        </div>
+      </div>
+
+      <div class="my-day-columns">
+        <div class="column" aria-label="Bookings">
+          <h3>Room & desk bookings</h3>
+          <ul id="booking-list" class="list"></ul>
+        </div>
+
+        <div class="column" aria-label="Visitors">
+          <h3>Visitors</h3>
+          <ul id="visitor-list" class="list"></ul>
+        </div>
+
+        <div class="column" aria-label="Meetings">
+          <h3>Meetings</h3>
+          <ul id="meeting-list" class="list"></ul>
+          <!-- This alert appears when a meeting doesn't have a room -->
+          <div id="meeting-alert" class="alert" role="status" aria-live="polite" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu -->
+    <section id="menu" class="menu-section" aria-labelledby="menu-title">
+      <div class="menu-header-row">
+        <div>
+          <h2 id="menu-title">Menu</h2>
+          <p class="section-lead" style="margin-bottom:0;">
+            Today’s restaurant and café options from Panorama.
+          </p>
+        </div>
+        <div class="menu-meta">
+          <span id="menu-date-label">Today</span> ·
+          <span id="menu-location-label">Default restaurant</span>
+        </div>
+      </div>
+
+      <div class="menu-grid" id="menu-grid" aria-label="Available meals"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© Panorama Portal</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

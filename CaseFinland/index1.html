@@ -1,0 +1,108 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panorama Client Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header with Panorama logo -->
+  <header class="site-header">
+    <div class="brand" aria-label="PANORAMA logo">
+      <!-- Inline SVG: PAN❤RAMA (primary #283897, heart #da2020) -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" role="img" aria-label="PANORAMA">
+        <style>
+          .word { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 700; fill: #283897; }
+        </style>
+        <text class="word" x="30" y="170" font-size="160">PAN</text>
+        <g transform="translate(430, 40)">
+          <path d="M120 35c-18-27-58-27-76 0-18 27-2 64 38 94 5 4 10 8 16 12 6-4 11-8 16-12 40-30 56-67 38-94-18-27-58-27-76 0z"
+                fill="#da2020"/>
+        </g>
+        <text class="word" x="580" y="170" font-size="160">RAMA</text>
+      </svg>
+    </div>
+
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#my-day">My day</a>
+      <a href="#menu">Menu</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-label="Welcome">
+      <h1>Welcome to Panorama</h1>
+      <p>Book spaces, manage your day, and order meals — all in one place.</p>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="card-grid" aria-labelledby="services-title">
+      <h2 id="services-title">Quick services</h2>
+
+      <article class="card service">
+        <h3>Book a room</h3>
+        <p>Find and reserve meeting rooms by capacity, equipment, and location.</p>
+        <button class="primary" onclick="location.href='book-room.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <h3>Book a desk</h3>
+        <p>Choose a desk near your team or amenities for the day.</p>
+	<br><br>
+        <button class="primary" onclick="location.href='book-desk.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <h3>Raise a service request</h3>
+        <p>Report a facility issue or request support from Workplace Services.</p>
+        <button class="primary" onclick="location.href='raise-request.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <h3>Register a visitor</h3>
+        <p>Pre‑register guests to streamline lobby check‑in and badge printing.</p>
+        <button class="primary" onclick="location.href='register-visitor.html'">Start</button>
+      </article>
+    </section>
+
+    <!-- My Day -->
+    <section id="my-day" class="my-day" aria-labelledby="myday-title">
+      <h2 id="myday-title">My day</h2>
+      <div class="my-day-columns">
+        <div class="column" aria-label="Bookings">
+          <h3>Room bookings</h3>
+          <ul id="booking-list" class="list"></ul>
+        </div>
+
+        <div class="column" aria-label="Visitors">
+          <h3>Visitors</h3>
+          <ul id="visitor-list" class="list"></ul>
+        </div>
+
+        <div class="column" aria-label="Meetings">
+          <h3>Meetings</h3>
+          <ul id="meeting-list" class="list"></ul>
+          <!-- This alert appears when a meeting doesn't have a room -->
+          <div id="meeting-alert" class="alert" role="status" aria-live="polite" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu -->
+    <section id="menu" class="menu-section" aria-labelledby="menu-title">
+      <h2 id="menu-title">Menu</h2>
+      <div class="menu-grid" id="menu-grid" aria-label="Available meals"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© Panorama Portal</p>
+  </footer>
+
+  <script src="app1.js"></script>
+</body>
+</html>
