@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register a visitor • Panorama</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --primary: #283897;
+      --accent: #da2020;
+      --bg: #f3f4f6;
+      --muted: #6b7280;
+      --card: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+
+    .page-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .page-header h1 {
+      color: var(--primary);
+      margin: 0;
+      font-size: 1.7rem;
+    }
+
+    .page-header p {
+      margin: .25rem 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .page-header .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+    }
+
+    .primary,
+    .secondary {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: .55rem 1.1rem;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .secondary {
+      background:#fff;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .secondary:hover {
+      background:#f9fafb;
+    }
+
+    .two-col {
+      display:grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px){
+      .two-col{ grid-template-columns: 1fr; }
+    }
+
+    /* Form card */
+    .form-card {
+      background: var(--card);
+      border:1px solid #e5e7eb;
+      border-radius:22px;
+      padding:1.4rem 1.5rem 1.3rem;
+      box-shadow:0 18px 40px rgba(15,23,42,.12);
+    }
+
+    .form-card h2 {
+      margin-top: 0;
+      margin-bottom: .25rem;
+      font-size: 1.25rem;
+    }
+
+    .form-card .hint-top {
+      color: var(--muted);
+      font-size:.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .fieldset {
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: .75rem 1rem;
+    }
+
+    .field {
+      display:flex;
+      flex-direction:column;
+      gap:.35rem;
+      grid-column: span 6;
+      min-width: 0;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+    .field.third { grid-column: span 4; }
+
+    @media (max-width: 720px) {
+      .field,
+      .field.full,
+      .field.third {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .field label {
+      font-weight:600;
+      font-size: .9rem;
+    }
+
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="datetime-local"],
+    .field select,
+    .field textarea {
+      border:1px solid #c7cfdd;
+      border-radius:.6rem;
+      padding:.6rem .7rem;
+      font:inherit;
+      background:#fff;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+      border-color: var(--primary);
+    }
+
+    .hint { color: var(--muted); font-size:.8rem; }
+    .error { color: var(--accent); font-size:.8rem; min-height: 1em; }
+
+    .inline-meta {
+      margin-top: .6rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .actions {
+      margin-top: .9rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      justify-content: flex-end;
+    }
+
+    /* Side panel */
+    .side {
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:0 12px 32px rgba(15,23,42,.12);
+    }
+
+    .side-header {
+      padding:.9rem 1rem .7rem;
+      border-bottom:1px solid #e5e7eb;
+    }
+
+    .side-header h2 {
+      margin:0 0 .15rem;
+      font-size:1.1rem;
+    }
+
+    .side-header p {
+      margin:0;
+      font-size:.82rem;
+      color: var(--muted);
+    }
+
+    .side-filters {
+      padding:.5rem 1rem .6rem;
+      border-bottom:1px solid #e5e7eb;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:.5rem;
+      font-size:.8rem;
+      color:var(--muted);
+    }
+
+    .visit-list {
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+
+    .visit-list li {
+      padding: .75rem 1rem .7rem;
+      border-bottom:1px solid #eef1f6;
+      display:grid;
+      grid-template-columns:minmax(0,1.7fr) auto;
+      gap:.4rem .6rem;
+      align-items:center;
+    }
+
+    .visit-list li:last-child { border-bottom:none; }
+
+    .visit-name {
+      font-size:.93rem;
+      font-weight:600;
+      margin-bottom:.1rem;
+    }
+
+    .visit-list .meta {
+      color: var(--muted);
+      font-size:.8rem;
+    }
+
+    .visit-list .meta span + span::before {
+      content: "·";
+      padding: 0 .25rem;
+    }
+
+    .parking-tag {
+      margin-top:.15rem;
+      font-size:.78rem;
+      color:#065f46;
+      display:inline-flex;
+      align-items:center;
+      gap:.25rem;
+    }
+
+    .parking-tag span {
+      padding:.1rem .45rem;
+      border-radius:999px;
+      background:#dcfce7;
+      border:1px solid #a7f3d0;
+    }
+
+    .status-pill {
+      justify-self:flex-end;
+      display:inline-flex;
+      align-items:center;
+      gap:.25rem;
+      padding:.18rem .65rem;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:600;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+
+    .status-expected {
+      background:#eff6ff;
+      border-color:#bfdbfe;
+      color:#1d4ed8;
+    }
+
+    .status-checkedin {
+      background:#dcfce7;
+      border-color:#86efac;
+      color:#166534;
+    }
+
+    .status-departed {
+      background:#e5e7eb;
+      border-color:#d1d5db;
+      color:#4b5563;
+    }
+
+    .status-late {
+      background:#fef3c7;
+      border-color:#facc15;
+      color:#92400e;
+    }
+
+    /* Toast confirmation */
+    .toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      background: #0f172a;
+      color: #fff;
+      padding: .9rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+      display:none;
+      max-width: 420px;
+      z-index: 40;
+    }
+    .toast strong { display:block; margin-bottom:.25rem; }
+    .toast span { font-size:.87rem; color:#e5e7eb; }
+    .toast .toast-actions { margin-top:.5rem; display:flex; gap:.5rem; flex-wrap:wrap; }
+    .toast .toast-actions .btn {
+      border-radius:999px;
+      padding:.45rem .9rem;
+      font-weight:600;
+      cursor:pointer;
+      border: none;
+      font-size:.86rem;
+    }
+    .btn-primary { background: var(--primary); color:#fff; }
+    .btn-accent  { background: var(--accent);  color:#fff; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand" aria-label="PANORAMA">
+      <!-- Inline logo -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" role="img" aria-label="PANORAMA">
+        <style>.word{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:700;fill:#283897;}</style>
+        <text class="word" x="30" y="170" font-size="160">PAN</text>
+        <g transform="translate(430, 40)">
+          <path d="M120 35c-18-27-58-27-76 0-18 27-2 64 38 94 5 4 10 8 16 12 6-4 11-8 16-12 40-30 56-67 38-94-18-27-58-27-76 0z" fill="#da2020"/>
+        </g>
+        <text class="word" x="580" y="170" font-size="160">RAMA</text>
+      </svg>
+    </div>
+    <nav class="top-nav">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#my-day">My day</a>
+      <a href="index.html#menu">Menu</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1>Register a visitor</h1>
+        <p>Pre-register guests so reception can prepare badges, parking and a smooth arrival.</p>
+      </div>
+      <div class="actions">
+        <button class="secondary" type="button" onclick="history.back()">Back</button>
+        <a class="secondary" href="index.html">Home</a>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Form -->
+      <section class="form-card" aria-label="Visitor registration form">
+        <h2>New visitor</h2>
+        <p class="hint-top">We’ll send the visitor a confirmation email with visit details and your optional message.</p>
+
+        <form id="visitor-form" novalidate>
+          <div class="fieldset">
+            <div class="field third">
+              <label for="v-first">First name *</label>
+              <input id="v-first" name="firstName" type="text" autocomplete="off" required />
+              <div class="error" data-err-for="v-first"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-last">Last name *</label>
+              <input id="v-last" name="lastName" type="text" autocomplete="off" required />
+              <div class="error" data-err-for="v-last"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-email">Email *</label>
+              <input id="v-email" name="email" type="email" autocomplete="off" inputmode="email" required />
+              <div class="error" data-err-for="v-email"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-company">Company</label>
+              <input id="v-company" name="company" type="text" />
+            </div>
+
+            <div class="field third">
+              <label for="v-datetime">Visit date &amp; time *</label>
+              <input id="v-datetime" name="when" type="datetime-local" required />
+              <div class="hint">Local office time</div>
+              <div class="error" data-err-for="v-datetime"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-host">Host *</label>
+              <input id="v-host" name="host" type="text" value="You" required />
+              <div class="error" data-err-for="v-host"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-location">Location *</label>
+              <select id="v-location" name="location" required>
+                <option value="">Select a site</option>
+                <option>Helsinki HQ – Lobby A</option>
+                <option>Helsinki HQ – Lobby B</option>
+                <option>Tampere Office</option>
+                <option>Remote site / Other</option>
+              </select>
+              <div class="error" data-err-for="v-location"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-purpose">Purpose *</label>
+              <select id="v-purpose" name="purpose" required>
+                <option value="">Select purpose</option>
+                <option>Business meeting</option>
+                <option>Interview</option>
+                <option>Contractor</option>
+                <option>Training</option>
+                <option>Other</option>
+              </select>
+              <div class="error" data-err-for="v-purpose"></div>
+            </div>
+
+            <div class="field third">
+              <label for="v-badge">Badge type</label>
+              <select id="v-badge" name="badgeType">
+                <option>Visitor</option>
+                <option>Contractor</option>
+                <option>Vendor</option>
+                <option>Temporary employee</option>
+              </select>
+            </div>
+
+            <!-- Parking -->
+            <div class="field third">
+              <label for="v-parking">Parking</label>
+              <select id="v-parking" name="parking">
+                <option value="">No reserved parking</option>
+                <option value="p1">P1 garage – visitor</option>
+                <option value="outdoor">Outdoor visitor spots</option>
+                <option value="ev">EV charging spot</option>
+              </select>
+              <span class="hint">We’ll include parking instructions in the email.</span>
+            </div>
+
+            <div class="field third">
+              <label for="v-vehicle">Vehicle plate (optional)</label>
+              <input id="v-vehicle" name="vehicle" type="text" placeholder="ABC-123" />
+            </div>
+
+            <div class="field full">
+              <label for="v-message">Message to visitor (email)</label>
+              <textarea id="v-message" name="message" rows="3" placeholder="Anything they should know before arrival (entry instructions, Wi-Fi, agenda, etc.)."></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="v-notes">Notes for reception</label>
+              <textarea id="v-notes" name="notes" rows="3" placeholder="Accessibility needs, language preferences, security notes, etc."></textarea>
+            </div>
+
+            <div class="field full" style="align-items:flex-start; gap:.6rem;">
+              <label class="hint" style="font-weight:400;">
+                <input type="checkbox" id="v-nda" name="nda" />
+                Require NDA at check-in
+              </label>
+            </div>
+          </div>
+
+          <div class="inline-meta">
+            For large events (10+ visitors), please contact Workplace Services so we can plan badge and seating logistics.
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="primary">Register visitor</button>
+            <button type="reset" class="secondary">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Side panel -->
+      <aside class="side" aria-label="Today's visitors">
+        <div class="side-header">
+          <h2>Today's visitors</h2>
+          <p>Visitors expected or already on site today.</p>
+        </div>
+        <div class="side-filters">
+          <span>Local time · <span id="visitor-date-label">Today</span></span>
+          <span id="visitor-count-label">0 visitors</span>
+        </div>
+        <ul class="visit-list" id="visit-list">
+          <!-- Filled by JS -->
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Confirmation toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong>Visitor registered</strong>
+    <span id="toast-text">Details sent to reception.</span>
+    <div class="toast-actions">
+      <button id="btn-calendar" class="btn btn-primary">Add to calendar</button>
+      <button id="btn-badge" class="btn btn-accent">Print badge</button>
+      <a href="index.html#my-day" class="btn btn-primary" style="text-decoration:none; display:inline-block;">View in My day</a>
+    </div>
+  </div>
+
+  <script src="register-visitor.js"></script>
+</body>
+</html>

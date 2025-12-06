@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Raise a Service Request • Panorama</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --primary: #283897;
+      --accent: #da2020;
+      --bg: #f3f4f6;
+      --muted: #6b7280;
+      --card: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .page-header h1 {
+      color: var(--primary);
+      margin: 0;
+      font-size: 1.7rem;
+    }
+
+    .page-header p {
+      margin: .25rem 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .page-header .header-meta {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .page-header .actions {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .primary,
+    .secondary {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: .55rem 1.1rem;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .secondary:hover {
+      background: #f9fafb;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form card */
+    .form-card {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 22px;
+      padding: 1.4rem 1.5rem 1.3rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .form-card h2 {
+      margin-top: 0;
+      margin-bottom: .25rem;
+      font-size: 1.25rem;
+    }
+
+    .form-card .hint {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .fieldset {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: .8rem 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      grid-column: span 6;
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field.third {
+      grid-column: span 4;
+    }
+
+    @media (max-width: 720px) {
+      .field,
+      .field.full,
+      .field.third {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .field label {
+      font-weight: 600;
+      font-size: .9rem;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      border: 1px solid #c7cfdd;
+      border-radius: .6rem;
+      padding: .6rem .7rem;
+      font: inherit;
+      background: #fff;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+      border-color: var(--primary);
+    }
+
+    .inline-meta {
+      margin-top: .6rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .actions {
+      margin-top: .9rem;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* Side panel */
+    .side {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+    }
+
+    .side-header {
+      padding: .9rem 1rem .7rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .side-header h2 {
+      margin: 0 0 .15rem;
+      font-size: 1.1rem;
+    }
+
+    .side-header p {
+      margin: 0;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .side-filters {
+      padding: .5rem 1rem .6rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .side-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+    }
+
+    .req-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .req-list li {
+      padding: .75rem 1rem .7rem;
+      border-bottom: 1px solid #eef1f6;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) auto;
+      gap: .4rem .6rem;
+      align-items: center;
+    }
+
+    .req-list li:last-child {
+      border-bottom: none;
+    }
+
+    .req-main-title {
+      font-size: .93rem;
+      font-weight: 600;
+      margin-bottom: .1rem;
+    }
+
+    .req-list .meta {
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .req-list .meta span + span::before {
+      content: "·";
+      padding: 0 .25rem;
+    }
+
+    .status-pill {
+      justify-self: flex-end;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      padding: .18rem .65rem;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .status-open {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    .status-progress {
+      background: #fef9c3;
+      border-color: #facc15;
+      color: #92400e;
+    }
+
+    .status-resolved {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .status-breached {
+      background: #fee2e2;
+      border-color: #f87171;
+      color: #b91c1c;
+    }
+
+    .sla-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      font-size: .75rem;
+      margin-top: .15rem;
+      color: #b91c1c;
+    }
+
+    .sla-badge span {
+      padding: .1rem .45rem;
+      border-radius: 999px;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      background: #0f172a;
+      color: #fff;
+      padding: .9rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
+      display: none;
+      max-width: 420px;
+      z-index: 40;
+    }
+
+    .toast strong {
+      display: block;
+      margin-bottom: .25rem;
+      font-size: .98rem;
+    }
+
+    .toast span {
+      font-size: .87rem;
+      color: #e5e7eb;
+    }
+
+    .toast .toast-actions {
+      margin-top: .5rem;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .toast .btn {
+      border-radius: 999px;
+      padding: .45rem .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-size: .86rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand">
+    <!-- PAN❤RAMA logo -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240">
+      <style>.word{font-family:'Segoe UI';font-weight:700;fill:#283897;}</style>
+      <text class="word" x="30" y="170" font-size="160">PAN</text>
+      <g transform="translate(430,40)">
+        <path d="M120 35c-18-27-58-27-76 0-18 27-2 64 38 94 5 4 10 8 16 12 6-4 11-8 16-12 40-30 56-67 38-94-18-27-58-27-76 0z" fill="#da2020"/>
+      </g>
+      <text class="word" x="580" y="170" font-size="160">RAMA</text>
+    </svg>
+  </div>
+  <nav class="top-nav">
+    <a href="index.html#services">Services</a>
+    <a href="index.html#my-day">My day</a>
+    <a href="index.html#menu">Menu</a>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>Raise a Service Request</h1>
+      <p>Log an issue or request to Workplace Services so we can route it to the right team.</p>
+      <div class="header-meta">Typical response time: <strong>4 business hours</strong> for normal priority.</div>
+    </div>
+    <div class="actions">
+      <button class="secondary" type="button" onclick="history.back()">Back</button>
+      <a href="index.html" class="secondary">Home</a>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <!-- Form -->
+    <section class="form-card" aria-label="Service request form">
+      <h2>New request</h2>
+      <p class="hint">Fields marked with * are required.</p>
+
+      <form id="request-form" novalidate>
+        <div class="fieldset">
+          <div class="field third">
+            <label for="r-category">Category *</label>
+            <select id="r-category" required>
+              <option value="">Select category</option>
+              <option>Cleaning</option>
+              <option>IT Support</option>
+              <option>HVAC / Temperature</option>
+              <option>Furniture</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field third">
+            <label for="r-priority">Priority *</label>
+            <select id="r-priority" required>
+              <option value="">Select priority</option>
+              <option>Low</option>
+              <option>Normal</option>
+              <option>High</option>
+              <option>Critical</option>
+            </select>
+          </div>
+
+          <div class="field third">
+            <label for="r-location">Location *</label>
+            <input id="r-location" type="text" placeholder="e.g., Floor 3 – West" required />
+          </div>
+
+          <div class="field full">
+            <label for="r-desc">Description *</label>
+            <textarea id="r-desc" rows="4" placeholder="Describe the issue or request" required></textarea>
+          </div>
+
+          <div class="field full">
+            <label for="r-attach">Attachment (optional)</label>
+            <input id="r-attach" type="file" />
+          </div>
+
+          <div class="field third">
+            <label for="r-contact">Contact phone *</label>
+            <input id="r-contact" type="text" placeholder="+358 ..." required />
+          </div>
+        </div>
+
+        <div class="inline-meta">
+          For urgent safety issues, please call the **workplace emergency number** instead of using this form.
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary">Submit request</button>
+          <button type="reset" class="secondary">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Side panel -->
+    <aside class="side" aria-label="Recent requests">
+      <div class="side-header">
+        <h2>Recent requests</h2>
+        <p>Track the latest requests you’ve submitted.</p>
+      </div>
+      <div class="side-filters">
+        <div class="side-toggle">
+          <input id="toggle-mine" type="checkbox" checked />
+          <label for="toggle-mine">Show my requests only</label>
+        </div>
+        <div>Updated just now</div>
+      </div>
+      <ul class="req-list" id="req-list"></ul>
+    </aside>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <strong>Request submitted</strong>
+  <span id="toast-text">Your request has been logged and sent to Workplace Services.</span>
+  <div class="toast-actions">
+    <button id="btn-track" class="btn btn-primary" type="button">Track status</button>
+    <button id="btn-new" class="btn btn-accent" type="button">New request</button>
+  </div>
+</div>
+
+<script src="raise-request.js"></script>
+</body>
+</html>

@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panorama Client Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --primary: #283897;
+      --accent: #da2020;
+      --bg: #f3f4f6;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --radius-lg: 18px;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #eef2ff, #f9fafb 45%, #f3f4f6);
+      color: #111827;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+
+    /* Header / nav (shared with other pages) */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 2.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    /* Logo container */
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Logo image */
+    .logo-img {
+      height: 32px;          /* 🔧 adjust this if you want it bigger/smaller */
+      width: auto;
+      display: block;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 1.5rem;
+      font-size: .95rem;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #374151;
+      padding-bottom: .2rem;
+      border-bottom: 2px solid transparent;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Generic button-like links */
+    .primary,
+    .secondary {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: .55rem 1.2rem;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .secondary:hover {
+      background: #f9fafb;
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 2rem;
+      align-items: center;
+      padding: 1.8rem 1.8rem 1.6rem;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 45%, #e0ecff 100%);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.16);
+      margin-bottom: 2.3rem;
+    }
+
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1.4rem 1.3rem 1.2rem;
+      }
+    }
+
+    .hero h1 {
+      margin: 0 0 .4rem;
+      font-size: clamp(2.1rem, 3vw, 2.5rem);
+      letter-spacing: .01em;
+    }
+
+    .hero p {
+      margin: 0 0 1.2rem;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: .75rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .22rem .7rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #e5e7eb;
+    }
+
+    .hero-right {
+      justify-self: center;
+      width: 100%;
+    }
+
+    .hero-summary {
+      border-radius: 18px;
+      background: #ffffff;
+      padding: 1rem 1rem .9rem;
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.16);
+      border: 1px solid #e5e7eb;
+      font-size: .88rem;
+    }
+
+    .hero-summary h2 {
+      margin: 0 0 .7rem;
+      font-size: 1.05rem;
+    }
+
+    .hero-summary-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: .75rem;
+    }
+
+    .hero-pill {
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: .78rem;
+      border: 1px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      margin-bottom: .35rem;
+    }
+
+    .hero-summary ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: .2rem;
+    }
+
+    .hero-summary li {
+      display: flex;
+      justify-content: space-between;
+      gap: .4rem;
+      color: #4b5563;
+    }
+
+    .hero-summary-label {
+      color: var(--muted);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    section > h2 {
+      margin-bottom: .8rem;
+      font-size: 1.4rem;
+    }
+
+    section > p.section-lead {
+      margin-top: 0;
+      margin-bottom: 1.3rem;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    /* Services (Quick services) */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.2rem;
+      align-items: stretch;
+    }
+
+    .card.service {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.15rem 1.05rem;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: .6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card.service::after {
+      content: "";
+      position: absolute;
+      inset: auto -40%;
+      height: 48%;
+      top: auto;
+      bottom: -20%;
+      background: radial-gradient(circle at top, rgba(40, 56, 151, 0.1), transparent 60%);
+      opacity: 0;
+      transition: opacity .18s;
+      pointer-events: none;
+    }
+
+    .card.service:hover::after {
+      opacity: 1;
+    }
+
+    .card.service h3 {
+      margin: 0 0 .2rem;
+      font-size: 1.05rem;
+    }
+
+    .card.service p {
+      margin: 0 0 .6rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .card.service .primary {
+      align-self: flex-start;
+      border-radius: 999px;
+      padding: .45rem 1.1rem;
+      font-size: .9rem;
+      border: 1px solid transparent;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .card.service .primary:hover {
+      box-shadow: 0 12px 30px rgba(40, 56, 151, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .service-eyebrow {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: #6b7280;
+      margin-bottom: .15rem;
+    }
+
+    /* My day – same visual language as other cards */
+    .my-day-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 1.4rem 1.5rem 1.3rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+      border: 1px solid #e5e7eb;
+    }
+
+    .my-day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .my-day-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .my-day-header p {
+      margin: .1rem 0 0;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .my-day-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .my-day-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .my-day-columns .column {
+      border-radius: 14px;
+      background: #f9fafb;
+      padding: .8rem .9rem .7rem;
+      border: 1px solid #e5e7eb;
+      min-height: 130px;
+    }
+
+    .my-day-columns .column h3 {
+      margin-top: 0;
+      margin-bottom: .4rem;
+      font-size: 1rem;
+    }
+
+    /* My Day list items: align info + badge nicely */
+    .my-day-columns .list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.35rem 0.15rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .my-day-columns .list li:last-child {
+      border-bottom: none;
+    }
+
+    .my-day-columns .list li > div:first-child strong {
+      font-size: 0.92rem;
+    }
+
+    .my-day-columns .list li > div:first-child span {
+      font-size: 0.82rem;
+      color: #6b7280;
+    }
+
+    /* Badges – small, pill-style, not chunky buttons */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.18rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    /* Green pill = OK state */
+    .badge.success {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    /* Amber pill = warning / needs action */
+    .badge.warning {
+      background: #fef3c7;
+      border-color: #facc15;
+      color: #92400e;
+    }
+
+    /* Make "Room needed" look like a real action button */
+    .badge-cta {
+      text-decoration: none;
+      cursor: pointer;
+      background: #f97316;
+      border-color: #ea580c;
+      color: #ffffff;
+      padding-inline: 0.8rem;
+    }
+
+    .badge-cta:hover {
+      background: #ea580c;
+      border-color: #c2410c;
+    }
+
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: .9rem;
+      color: #4b5563;
+      display: grid;
+      gap: .25rem;
+    }
+
+    .list.empty::before {
+      content: "Nothing scheduled yet.";
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .alert {
+      margin-top: .5rem;
+      padding: .45rem .55rem;
+      border-radius: 10px;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      font-size: .82rem;
+      color: #92400e;
+    }
+
+    /* Menu */
+    .menu-section > h2 {
+      margin-bottom: .2rem;
+    }
+
+    .menu-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .75rem;
+      margin-bottom: .8rem;
+      flex-wrap: wrap;
+    }
+
+    .menu-meta {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .menu-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: .85rem .9rem .8rem;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: .45rem;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+      font-size: .9rem;
+    }
+
+    .menu-card .image-wrapper {
+      height: 70px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #e5e7eb;
+    }
+
+    .menu-card .menu-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .menu-card h3 {
+      margin: 0 0 .1rem;
+      font-size: 1rem;
+    }
+
+    .menu-card p {
+      margin: 0;
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    .menu-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .28rem;
+      margin-top: .35rem;
+    }
+
+    .diet-tag,
+    .allergen-tag {
+      font-size: .76rem;
+      border-radius: 999px;
+      padding: .12rem .55rem;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      white-space: nowrap;
+    }
+
+    .diet-tag {
+      color: #166534;
+      border-color: #bbf7d0;
+      background: #ecfdf5;
+    }
+
+    .allergen-tag {
+      color: #b45309;
+      border-color: #fed7aa;
+      background: #fffbeb;
+    }
+
+    .menu-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .4rem;
+      margin-top: .2rem;
+      font-size: .78rem;
+    }
+
+    .co2-chip {
+      padding: .16rem .6rem;
+      border-radius: 999px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #1d4ed8;
+      white-space: nowrap;
+    }
+
+    .favourite {
+      font-size: .8rem;
+      color: #f97316;
+      white-space: nowrap;
+    }
+
+    .warning-note {
+      font-size: .8rem;
+      color: #b91c1c;
+      white-space: nowrap;
+    }
+
+    .menu-card .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .6rem;
+      margin-top: .25rem;
+      font-size: .9rem;
+    }
+
+    .menu-card .price {
+      font-weight: 600;
+    }
+
+    /* Equal-width Pay buttons */
+    .menu-card .pay {
+      border-radius: 999px;
+      border: 1px solid var(--primary);
+      padding: .32rem .8rem;
+      font-size: .86rem;
+      background: #ffffff;
+      color: var(--primary);
+      cursor: pointer;
+      flex: 0 0 110px;
+      text-align: center;
+    }
+
+    .menu-card .pay:hover {
+      background: #eef2ff;
+    }
+
+    /* Recommended / upcoming section under menu */
+    .menu-recommended {
+      margin-top: 1.6rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .reco-card {
+      border-radius: 16px;
+      border: 1px dashed #e5e7eb;
+      padding: .85rem 1rem .8rem;
+      background: #f9fafb;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      font-size: .88rem;
+      display: grid;
+      gap: .25rem;
+    }
+
+    .reco-title {
+      font-weight: 600;
+      font-size: .95rem;
+    }
+
+    .reco-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      padding: .14rem .6rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      font-size: .78rem;
+      color: #4b5563;
+    }
+
+    .reco-pill.highlight {
+      border-color: #22c55e;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* Menu toolbar (tabs + filters) */
+    .menu-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1rem;
+      margin-top: .75rem;
+      font-size: .85rem;
+    }
+
+    .menu-tabs {
+      display: inline-flex;
+      gap: .35rem;
+      flex-wrap: wrap;
+    }
+
+    .menu-tab {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: .22rem .9rem;
+      cursor: pointer;
+      font: inherit;
+      font-size: .83rem;
+      color: #4b5563;
+    }
+
+    .menu-tab[aria-selected="true"] {
+      background: #eef2ff;
+      border-color: #4f46e5;
+      color: #1d4ed8;
+      font-weight: 600;
+      box-shadow: 0 6px 12px rgba(79, 70, 229, 0.18);
+    }
+
+    .menu-filters {
+      display: inline-flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+    }
+
+    .menu-filter {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: .22rem .8rem;
+      background: rgba(249, 250, 251, 0.9);
+      cursor: pointer;
+      font: inherit;
+      font-size: .82rem;
+      color: #4b5563;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+    }
+
+    .menu-filter.is-active {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+      color: #166534;
+      font-weight: 600;
+      box-shadow: 0 6px 14px rgba(16, 185, 129, 0.22);
+    }
+
+    .menu-filter[data-filter="vegan"]::before {
+      content: "🌱";
+    }
+
+    .menu-filter[data-filter="glutenfree"]::before {
+      content: "🌾";
+    }
+
+    .menu-filter[data-filter="lowco2"]::before {
+      content: "🌍";
+    }
+
+    /* Footer */
+    .site-footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.2rem 1.5rem 2rem;
+      font-size: .8rem;
+      color: var(--muted);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Panorama logo -->
+  <header class="site-header">
+    <div class="brand" aria-label="PANORAMA logo">
+      <img
+        src="images/panoramalogo2.png"
+        alt="Panorama"
+        class="logo-img"
+      />
+    </div>
+
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#my-day">My day</a>
+      <a href="#menu">Menu</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-label="Welcome">
+      <div>
+        <h1>Welcome to Panorama</h1>
+        <p>Book spaces, manage your day, and follow today’s menu — all in one place.</p>
+
+        <div class="hero-actions">
+          <a class="primary" href="book-room.html">Book a room</a>
+          <a class="secondary" href="#services">View all services</a>
+        </div>
+
+        <div class="hero-meta">
+          <span>✅ Quick bookings for rooms & desks</span>
+          <span>🧑‍💼 Visitor & meeting support</span>
+          <span>🥗 Daily restaurant menus</span>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-summary" aria-label="Today at a glance">
+          <h2>Today at a glance</h2>
+          <div class="hero-summary-grid">
+            <div>
+              <div class="hero-pill">My bookings</div>
+              <ul>
+                <li>
+                  <span class="hero-summary-label">Rooms</span>
+                  <span id="hero-rooms-count">–</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Desks</span>
+                  <span id="hero-desks-count">–</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Visitors</span>
+                  <span id="hero-visitors-count">–</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div class="hero-pill">Up next</div>
+              <ul>
+                <li>
+                  <span class="hero-summary-label">Next meeting</span>
+                  <span id="hero-next-meeting">No meeting</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Room</span>
+                  <span id="hero-next-meeting-room">Not assigned</span>
+                </li>
+                <li>
+                  <span class="hero-summary-label">Menu</span>
+                  <span id="hero-menu-highlight">Loading...</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" aria-labelledby="services-title">
+      <h2 id="services-title">Quick services</h2>
+      <p class="section-lead">
+        Start with the most common workplace tasks. You can always come back to see your day and today’s menu.
+      </p>
+
+      <div class="card-grid">
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Spaces</div>
+            <h3>Book a room</h3>
+            <p>Find and reserve meeting rooms by capacity, equipment, and location.</p>
+          </div>
+          <button class="primary" onclick="location.href='book-room.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Spaces</div>
+            <h3>Book a desk</h3>
+            <p>Choose a desk near your team, amenities or in a quiet zone for the day.</p>
+          </div>
+          <button class="primary" onclick="location.href='book-desk.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Meetings</div>
+            <h3>Arrange a meeting</h3>
+            <p>Plan a meeting with room, visitors and services in one flow.</p>
+          </div>
+          <button class="primary" onclick="location.href='arrange-meeting.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Support</div>
+            <h3>Raise a service request</h3>
+            <p>Report a facility issue or request support from Workplace Services.</p>
+          </div>
+          <button class="primary" onclick="location.href='raise-request.html'">Start</button>
+        </article>
+
+        <article class="card service">
+          <div>
+            <div class="service-eyebrow">Visitors</div>
+            <h3>Register a visitor</h3>
+            <p>Pre-register guests to streamline lobby check-in and badge printing.</p>
+          </div>
+          <button class="primary" onclick="location.href='register-visitor.html'">Start</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- My Day -->
+    <section id="my-day" class="my-day-card" aria-labelledby="myday-title">
+      <div class="my-day-header">
+        <div>
+          <h2 id="myday-title">My day</h2>
+          <p>See today’s bookings, visitors and meetings in one view.</p>
+        </div>
+        <div class="my-day-filter" aria-label="Current view">
+          <span>Today</span> · <span>Office view</span>
+        </div>
+      </div>
+
+      <div class="my-day-columns">
+        <div class="column" aria-label="Bookings">
+          <h3>Room & desk bookings</h3>
+          <ul id="booking-list" class="list"></ul>
+        </div>
+
+        <div class="column" aria-label="Visitors">
+          <h3>Visitors</h3>
+          <ul id="visitor-list" class="list"></ul>
+        </div>
+
+        <div class="column" aria-label="Meetings">
+          <h3>Meetings</h3>
+          <ul id="meeting-list" class="list"></ul>
+          <!-- This alert appears when a meeting doesn't have a room -->
+          <div id="meeting-alert" class="alert" role="status" aria-live="polite" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu -->
+    <section id="menu" class="menu-section" aria-labelledby="menu-title">
+      <div class="menu-header-row">
+        <div>
+          <h2 id="menu-title">Menu</h2>
+          <p class="section-lead" style="margin-bottom:0;">
+            Today’s restaurant and café options from Panorama.
+          </p>
+        </div>
+        <div class="menu-meta">
+          <span id="menu-date-label">Today</span> ·
+          <span id="menu-location-label">Main restaurant</span>
+        </div>
+      </div>
+
+      <!-- Tabs + filters -->
+      <div class="menu-toolbar">
+        <div class="menu-tabs" role="tablist" aria-label="Week days">
+          <button class="menu-tab" data-day="mon" aria-selected="false">Mon</button>
+          <button class="menu-tab" data-day="tue" aria-selected="false">Tue</button>
+          <button class="menu-tab" data-day="wed" aria-selected="false">Wed</button>
+          <button class="menu-tab" data-day="thu" aria-selected="false">Thu</button>
+          <button class="menu-tab" data-day="fri" aria-selected="false">Fri</button>
+        </div>
+        <div class="menu-filters" aria-label="Dietary filters">
+          <button class="menu-filter" data-filter="vegan">Vegan</button>
+          <button class="menu-filter" data-filter="glutenfree">Gluten-free</button>
+          <button class="menu-filter" data-filter="lowco2">Low CO₂</button>
+        </div>
+      </div>
+
+      <div class="menu-grid" id="menu-grid" aria-label="Available meals"></div>
+
+      <!-- Recommended / upcoming -->
+      <div class="menu-recommended" id="menu-recommended" aria-label="Recommended for you"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© Panorama Portal</p>
+  </footer>
+
+  <script src="app.js"></script>
+
+  <!-- Meal details modal -->
+  <div class="meal-modal-backdrop" id="meal-modal" hidden>
+    <div class="meal-modal" role="dialog" aria-modal="true" aria-labelledby="meal-modal-title">
+      <button class="meal-modal-close" id="meal-modal-close" aria-label="Close">
+        ×
+      </button>
+      <div class="meal-modal-header">
+        <h3 id="meal-modal-title"></h3>
+        <span id="meal-modal-price"></span>
+      </div>
+      <p id="meal-modal-desc"></p>
+
+      <div class="meal-modal-tags" id="meal-modal-tags"></div>
+
+      <div class="meal-modal-nutrition">
+        <div>
+          <span class="nutri-label">Calories</span>
+          <span class="nutri-value" id="meal-modal-calories">–</span>
+        </div>
+        <div>
+          <span class="nutri-label">CO₂</span>
+          <span class="nutri-value" id="meal-modal-co2">–</span>
+        </div>
+      </div>
+
+      <div class="meal-modal-footer">
+        <button class="primary" id="meal-modal-pay">Pay now</button>
+        <button class="secondary" id="meal-modal-close-2">Close</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

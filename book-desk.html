@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book a Desk • Panorama</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --primary: #283897;
+      --muted: #6b7280;
+      --accent: #da2020;
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: #111827;
+    }
+
+    /* Header / Nav (shared) */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .75rem 2.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .site-header .brand svg {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 1.5rem;
+      font-size: .95rem;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #374151;
+      padding-bottom: .2rem;
+      border-bottom: 2px solid transparent;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Layout (shared) */
+    .container {
+      max-width: 1120px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-header-main {
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .page-header-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .page-header .actions {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 1.8rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Buttons (shared) */
+    .primary,
+    .secondary,
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: .55rem 1.1rem;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .primary,
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .primary:hover,
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .secondary,
+    .btn-secondary,
+    .btn-accent {
+      background: #ffffff;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .secondary:hover,
+    .btn-secondary:hover,
+    .btn-accent:hover {
+      background: #f9fafb;
+    }
+
+    .btn-accent {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Form card (shared-ish) */
+    .form-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.6rem 1.4rem;
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .form-card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      margin-bottom: .4rem;
+    }
+
+    .form-card .hint {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: .15rem;
+      display: inline-block;
+    }
+
+    .fieldset {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      min-width: 0;
+    }
+
+    .field.third {
+      flex: 1 1 calc(33% - .75rem);
+    }
+
+    .field.full {
+      flex: 1 1 100%;
+    }
+
+    @media (max-width: 700px) {
+      .field.third {
+        flex: 1 1 100%;
+      }
+    }
+
+    label {
+      font-size: .9rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    input,
+    select {
+      padding: .5rem .65rem;
+      border-radius: .6rem;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 2.4rem;
+    }
+
+    select[multiple] {
+      min-height: 4.5rem;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+      border-color: var(--primary);
+    }
+
+    .form-card .actions {
+      display: flex;
+      gap: .5rem;
+      margin-top: 1.2rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .form-inline-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: .75rem;
+      font-size: .85rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .form-inline-meta a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .form-inline-meta a:hover {
+      text-decoration: underline;
+    }
+
+    /* Side panel (shared-ish) */
+    .side {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.5rem 1.5rem;
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .side-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .7rem;
+    }
+
+    .side-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .results-meta {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    /* --- DESK-SPECIFIC VISUALS --- */
+
+    .desk-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .desk-card {
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1.5px solid #e5e7eb;
+      padding: 1rem 1.15rem .9rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      transition: box-shadow .18s, border-color .18s, transform .18s;
+    }
+
+    .desk-card:hover {
+      border-color: var(--primary, #283897);
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .desk-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: .5rem;
+    }
+
+    .desk-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--primary, #283897);
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .desk-meta {
+      font-size: .85rem;
+      color: var(--muted, #6b7280);
+    }
+
+    .desk-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+    }
+
+    .desk-tag {
+      font-size: .78rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: .15rem .6rem;
+      background: #f9fafb;
+      color: #4b5563;
+    }
+
+    .desk-tag-strong {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: var(--primary, #283897);
+      font-weight: 600;
+    }
+
+    .desk-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .6rem;
+      margin-top: .2rem;
+      font-size: .8rem;
+      color: var(--muted, #6b7280);
+      flex-wrap: wrap;
+    }
+
+    .desk-pill {
+      padding: .16rem .5rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .desk-cards .empty {
+      text-align: center;
+      color: var(--muted, #6b7280);
+      font-size: .95rem;
+      padding: 2rem 0 1.7rem;
+      grid-column: 1 / -1;
+    }
+
+    .desk-cards .empty strong {
+      display: block;
+      margin-bottom: .25rem;
+      font-size: 1.05rem;
+      color: #111827;
+    }
+
+    .quick-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-bottom: .75rem;
+    }
+
+    .quick-filter {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: .22rem .7rem;
+      font-size: .8rem;
+      background: #f9fafb;
+      cursor: pointer;
+    }
+
+    .quick-filter.active {
+      background: #eef2ff;
+      border-color: var(--primary, #283897);
+      color: var(--primary, #283897);
+      font-weight: 600;
+    }
+
+    .booking-summary {
+      margin-top: 1.1rem;
+      padding: .7rem .9rem;
+      border-radius: 12px;
+      background: #ecfdf5;
+      border: 1px dashed #6ee7b7;
+      font-size: .9rem;
+      color: #047857;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      align-items: center;
+    }
+
+    .booking-summary strong {
+      font-weight: 700;
+    }
+
+    .summary-pill {
+      padding: .18rem .6rem;
+      border-radius: 999px;
+      background: #d1fae5;
+      border: 1px solid #a7f3d0;
+      font-size: .85rem;
+      color: #065f46;
+    }
+
+    /* Toast (shared) */
+    .toast {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      background: #022c22;
+      color: #ecfdf5;
+      padding: 1rem 1.1rem;
+      border-radius: 1rem;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+      display: none;
+      flex-direction: column;
+      gap: .4rem;
+      max-width: 360px;
+      z-index: 50;
+    }
+
+    .toast strong {
+      font-size: .98rem;
+    }
+
+    .toast span {
+      font-size: .87rem;
+      color: #a7f3d0;
+    }
+
+    .toast-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .3rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand" aria-label="PANORAMA logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" role="img" aria-label="PANORAMA">
+        <style>
+          .word { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 700; fill: #283897; }
+        </style>
+        <text class="word" x="30" y="170" font-size="160">PAN</text>
+        <g transform="translate(430, 40)">
+          <path d="M120 35c-18-27-58-27-76 0-18 27-2 64 38 94 5 4 10 8 16 12 6-4 11-8 16-12 40-30 56-67 38-94-18-27-58-27-76 0z" fill="#da2020"/>
+        </g>
+        <text class="word" x="580" y="170" font-size="160">RAMA</text>
+      </svg>
+    </div>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#my-day">My day</a>
+      <a href="index.html#menu">Menu</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-main">
+        <h1>Book a Desk</h1>
+        <p class="page-header-subtitle">
+          Choose a date, time, and area to find a desk that fits how you work.
+        </p>
+      </div>
+      <div class="actions">
+        <button class="secondary" type="button" onclick="history.back()">Back</button>
+        <a class="secondary" href="index.html">Home</a>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <section class="form-card" aria-label="Desk booking form">
+        <h2>Your desk for the day</h2>
+        <p class="hint">All fields marked with * are required.</p>
+
+        <form id="desk-form" novalidate>
+          <div class="fieldset">
+            <div class="field third">
+              <label for="d-date">Date *</label>
+              <input id="d-date" type="date" required />
+            </div>
+
+            <div class="field third">
+              <label for="d-start">Start time *</label>
+              <input id="d-start" type="time" required />
+            </div>
+
+            <div class="field third">
+              <label for="d-end">End time *</label>
+              <input id="d-end" type="time" required />
+              <span class="hint">
+                <label style="font-weight: normal;">
+                  <input id="d-full-day" type="checkbox" /> Full day
+                </label>
+              </span>
+            </div>
+
+            <div class="field third">
+              <label for="d-location">Location *</label>
+              <select id="d-location" required>
+                <option value="">Select location</option>
+                <option value="helsinki-hq-floor-3">Helsinki HQ – Floor 3</option>
+                <option value="helsinki-hq-floor-2">Helsinki HQ – Floor 2</option>
+                <option value="tampere-office">Tampere Office</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label for="d-neighborhood">Area / neighborhood</label>
+              <select id="d-neighborhood">
+                <option value="">Any area</option>
+                <option value="focus">Focus zone (quiet)</option>
+                <option value="collaboration">Collaboration area</option>
+                <option value="near-team">Near my team</option>
+                <option value="window">Near window</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="d-equipment">Desk preferences</label>
+              <select id="d-equipment" multiple>
+                <option value="dual_monitors">Dual monitors</option>
+                <option value="single_monitor">Single monitor</option>
+                <option value="docking_station">Docking station</option>
+                <option value="standing_desk">Height-adjustable desk</option>
+                <option value="ergonomic_chair">Ergonomic chair</option>
+                <option value="near_window">Near window</option>
+                <option value="quiet_zone">Quiet zone</option>
+              </select>
+              <span class="hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple items.</span>
+            </div>
+          </div>
+
+          <div class="booking-summary" aria-live="polite">
+            <strong>Booking summary</strong>
+            <span class="summary-pill" id="summary-date">No date selected</span>
+            <span class="summary-pill" id="summary-time">No time selected</span>
+            <span class="summary-pill" id="summary-location">No location selected</span>
+          </div>
+
+          <div class="form-inline-meta">
+            <span>Desk bookings are for one person per desk.</span>
+            <span>Need a room instead? Switch to <a href="book-room.html">Book a Room</a>.</span>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="primary">Search desks</button>
+            <button type="reset" class="secondary">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="side" aria-label="Available desks">
+        <div class="side-header">
+          <h2>Available desks</h2>
+          <span class="results-meta" id="desk-results-meta">No search yet</span>
+        </div>
+
+        <div class="quick-filters" aria-label="Quick filters">
+          <button type="button" class="quick-filter active">All desks</button>
+          <button type="button" class="quick-filter">Quiet zone</button>
+          <button type="button" class="quick-filter">Near window</button>
+          <button type="button" class="quick-filter">Standing desk</button>
+          <button type="button" class="quick-filter">Dual monitors</button>
+        </div>
+
+        <ul class="desk-cards" id="desk-list">
+          <li class="empty" id="desk-empty-state">
+            <strong>No desks to show yet</strong>
+            Use the form on the left to search for available desks.
+          </li>
+
+          <!-- Example static card -->
+          <li class="desk-card" aria-hidden="true">
+            <div class="desk-header-line">
+              <div>
+                <div class="desk-title">
+                  <span>🪑</span> Desk 3A-17
+                </div>
+                <div class="desk-meta">
+                  Helsinki HQ – Floor 3 · Focus zone · Near window
+                </div>
+              </div>
+              <span class="desk-pill">Quiet</span>
+            </div>
+            <div class="desk-tags">
+              <span class="desk-tag desk-tag-strong">Dual monitors</span>
+              <span class="desk-tag">Docking station</span>
+              <span class="desk-tag">Ergonomic chair</span>
+              <span class="desk-tag">Height-adjustable</span>
+            </div>
+            <div class="desk-footer">
+              <span>Next available: 08:00–16:00</span>
+              <button class="primary" type="button">Book this desk</button>
+            </div>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong>Desk booked</strong>
+    <span id="toast-text">Your desk is reserved for today.</span>
+    <div class="toast-actions">
+      <button id="btn-calendar" class="btn btn-primary" type="button">Add to calendar</button>
+      <button id="btn-new" class="btn btn-accent" type="button">New booking</button>
+      <a href="index.html#my-day" class="btn btn-secondary">View in My day</a>
+    </div>
+  </div>
+
+  <script src="book-desk.js"></script>
+  <script>
+    // summary + full-day toggle
+    (function () {
+      const date = document.getElementById('d-date');
+      const start = document.getElementById('d-start');
+      const end = document.getElementById('d-end');
+      const fullDay = document.getElementById('d-full-day');
+      const location = document.getElementById('d-location');
+
+      const sDate = document.getElementById('summary-date');
+      const sTime = document.getElementById('summary-time');
+      const sLocation = document.getElementById('summary-location');
+
+      function fmtDate(value) {
+        if (!value) return 'No date selected';
+        const d = new Date(value + 'T00:00:00');
+        if (isNaN(d)) return value;
+        return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      }
+
+      function updateSummary() {
+        sDate.textContent = fmtDate(date.value);
+        if (fullDay.checked) {
+          sTime.textContent = 'Full day (08:00–16:00)';
+        } else {
+          sTime.textContent = (start.value && end.value)
+            ? `${start.value} – ${end.value}`
+            : 'No time selected';
+        }
+        const opt = location.options[location.selectedIndex];
+        sLocation.textContent = opt ? opt.text : 'No location selected';
+      }
+
+      fullDay.addEventListener('change', () => {
+        if (fullDay.checked) {
+          start.value = '08:00';
+          end.value = '16:00';
+        }
+        updateSummary();
+      });
+
+      [date, start, end, location].forEach(el => el && el.addEventListener('change', updateSummary));
+      updateSummary();
+    }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arrange a Meeting • Panorama</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --primary: #283897;
+      --accent: #da2020;
+      --bg: #f3f4f6;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --radius-lg: 18px;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    /* Header / nav (same as other pages) */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .75rem 2.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .site-header .brand svg {
+      height: 42px;
+      width: auto;
+      display: block;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 1.5rem;
+      font-size: .95rem;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #374151;
+      padding-bottom: .2rem;
+      border-bottom: 2px solid transparent;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 1.8rem auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+
+    /* Buttons */
+    .primary,
+    .secondary {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: .55rem 1.2rem;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .secondary {
+      background: #ffffff;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .secondary:hover {
+      background: #f9fafb;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.6rem;
+      flex-wrap: wrap;
+    }
+
+    .page-header-main h1 {
+      margin: 0;
+      font-size: 1.7rem;
+    }
+
+    .page-header-main p {
+      margin: .15rem 0 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .page-header-actions {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Layout: stepper + content */
+    .wizard-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 3.3fr);
+      gap: 1.6rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      .wizard-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .wizard-shell {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 1.3rem 1.4rem 1.3rem;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16);
+      border: 1px solid #e5e7eb;
+    }
+
+    /* Stepper */
+    .stepper {
+      display: grid;
+      gap: .9rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .stepper-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: .7rem;
+      align-items: flex-start;
+    }
+
+    .stepper-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 2px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      font-weight: 600;
+      color: #6b7280;
+      background: #f9fafb;
+      flex-shrink: 0;
+    }
+
+    .stepper-item.active .stepper-badge {
+      border-color: var(--primary);
+      background: #eef2ff;
+      color: var(--primary);
+    }
+
+    .stepper-item.complete .stepper-badge {
+      border-color: #22c55e;
+      background: #dcfce7;
+      color: #16a34a;
+      font-size: 1rem;
+    }
+
+    .stepper-text {
+      font-size: .9rem;
+    }
+
+    .stepper-text strong {
+      display: block;
+      margin-bottom: .05rem;
+    }
+
+    .stepper-text span {
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    /* Summary card */
+    .summary-card {
+      margin-top: 1rem;
+      padding: .8rem .9rem .75rem;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: .86rem;
+      display: grid;
+      gap: .35rem;
+    }
+
+    .summary-card h2 {
+      margin: 0 0 .35rem;
+      font-size: 1rem;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: .5rem;
+    }
+
+    .summary-label {
+      color: var(--muted);
+    }
+
+    /* Form area */
+    .wizard-main {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 1.4rem 1.5rem 1.3rem;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16);
+      border: 1px solid #e5e7eb;
+    }
+
+    .wizard-step-header {
+      margin-bottom: 1rem;
+    }
+
+    .wizard-step-header h2 {
+      margin: 0 0 .25rem;
+      font-size: 1.3rem;
+    }
+
+    .wizard-step-header p {
+      margin: 0;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .fieldset {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+      min-width: 0;
+    }
+
+    .field.third {
+      flex: 1 1 calc(33% - .7rem);
+    }
+
+    .field.half {
+      flex: 1 1 calc(50% - .7rem);
+    }
+
+    .field.full {
+      flex: 1 1 100%;
+    }
+
+    @media (max-width: 700px) {
+      .field.third,
+      .field.half {
+        flex: 1 1 100%;
+      }
+    }
+
+    label {
+      font-size: .9rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: .5rem .65rem;
+      border-radius: .6rem;
+      border: 1px solid #d1d5db;
+      font: inherit;
+      background: #ffffff;
+      min-height: 2.35rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+      border-color: var(--primary);
+    }
+
+    .hint {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    /* Attendee pills (demo only) */
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .4rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      font-size: .8rem;
+    }
+
+    .pill button {
+      border: none;
+      background: none;
+      font-size: .8rem;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0;
+    }
+
+    /* Room cards (simple demo) */
+    .room-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .8rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .room-card {
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      padding: .8rem .9rem .75rem;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      cursor: pointer;
+      background: #f9fafb;
+      transition: border-color .15s, background .15s, box-shadow .15s;
+    }
+
+    .room-card:hover {
+      border-color: var(--primary);
+      background: #eef2ff;
+      box-shadow: 0 8px 24px rgba(40, 56, 151, 0.16);
+    }
+
+    .room-card.selected {
+      border-color: var(--primary);
+      background: #e0ebff;
+      box-shadow: 0 8px 28px rgba(40, 56, 151, 0.3);
+    }
+
+    .room-title {
+      font-weight: 600;
+      font-size: .98rem;
+    }
+
+    .room-meta {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .room-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .3rem;
+      font-size: .78rem;
+    }
+
+    .room-tag {
+      padding: .1rem .55rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+    }
+
+    /* Catering */
+    .catering-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: .65rem;
+    }
+
+    .catering-item {
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: .55rem .6rem .5rem;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+      font-size: .88rem;
+    }
+
+    .catering-item label {
+      font-weight: 500;
+      font-size: .9rem;
+    }
+
+    .catering-item span {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    /* Navigation buttons */
+    .wizard-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .wizard-actions-right {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      background: #022c22;
+      color: #ecfdf5;
+      padding: 1rem 1.1rem;
+      border-radius: 1rem;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+      display: none;
+      flex-direction: column;
+      gap: .4rem;
+      max-width: 360px;
+      z-index: 50;
+    }
+
+    .toast strong {
+      font-size: .98rem;
+    }
+
+    .toast span {
+      font-size: .87rem;
+      color: #a7f3d0;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand" aria-label="PANORAMA logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" role="img" aria-label="PANORAMA">
+        <style>
+          .word { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 700; fill: #283897; }
+        </style>
+        <text class="word" x="30" y="170" font-size="160">PAN</text>
+        <g transform="translate(430, 40)">
+          <path d="M120 35c-18-27-58-27-76 0-18 27-2 64 38 94 5 4 10 8 16 12 6-4 11-8 16-12 40-30 56-67 38-94-18-27-58-27-76 0z" fill="#da2020"/>
+        </g>
+        <text class="word" x="580" y="170" font-size="160">RAMA</text>
+      </svg>
+    </div>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#my-day">My day</a>
+      <a href="index.html#menu">Menu</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-main">
+        <h1>Arrange a meeting</h1>
+        <p>Plan a meeting step by step: time, people, room, and catering.</p>
+      </div>
+      <div class="page-header-actions">
+        <a class="secondary" href="index.html">Back to home</a>
+      </div>
+    </div>
+
+    <div class="wizard-layout">
+      <!-- Left: stepper + summary -->
+      <aside class="wizard-shell" aria-label="Meeting progress">
+        <div class="stepper">
+          <div class="stepper-item active" data-step="1">
+            <div class="stepper-badge" aria-hidden="true">1</div>
+            <div class="stepper-text">
+              <strong>Date &amp; time</strong>
+              <span>Select when and where the meeting happens.</span>
+            </div>
+          </div>
+          <div class="stepper-item" data-step="2">
+            <div class="stepper-badge" aria-hidden="true">2</div>
+            <div class="stepper-text">
+              <strong>People</strong>
+              <span>Add internal and external attendees.</span>
+            </div>
+          </div>
+          <div class="stepper-item" data-step="3">
+            <div class="stepper-badge" aria-hidden="true">3</div>
+            <div class="stepper-text">
+              <strong>Room</strong>
+              <span>Select a suitable room for your meeting.</span>
+            </div>
+          </div>
+          <div class="stepper-item" data-step="4">
+            <div class="stepper-badge" aria-hidden="true">4</div>
+            <div class="stepper-text">
+              <strong>Catering</strong>
+              <span>Order refreshments and set delivery time.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-card" aria-live="polite">
+          <h2>Meeting summary</h2>
+          <div class="summary-line">
+            <span class="summary-label">Title</span>
+            <span id="sum-title">Untitled meeting</span>
+          </div>
+          <div class="summary-line">
+            <span class="summary-label">Date &amp; time</span>
+            <span id="sum-when">Not set</span>
+          </div>
+          <div class="summary-line">
+            <span class="summary-label">Location</span>
+            <span id="sum-location">Not set</span>
+          </div>
+          <div class="summary-line">
+            <span class="summary-label">Attendees</span>
+            <span id="sum-attendees">0 people</span>
+          </div>
+          <div class="summary-line">
+            <span class="summary-label">Room</span>
+            <span id="sum-room">Not selected</span>
+          </div>
+          <div class="summary-line">
+            <span class="summary-label">Catering</span>
+            <span id="sum-catering">None</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right: step content -->
+      <section class="wizard-main" aria-label="Meeting details">
+        <!-- Step 1: Date / time -->
+        <div class="wizard-step" data-step="1">
+          <div class="wizard-step-header">
+            <h2>1. Select date &amp; time</h2>
+            <p>Pick when the meeting takes place and which office it belongs to.</p>
+          </div>
+          <div class="fieldset">
+            <div class="field full">
+              <label for="m-title">Meeting title *</label>
+              <input id="m-title" type="text" placeholder="e.g., Q2 Planning with Sales" required />
+            </div>
+            <div class="field third">
+              <label for="m-date">Date *</label>
+              <input id="m-date" type="date" required />
+            </div>
+            <div class="field third">
+              <label for="m-start">Start time *</label>
+              <input id="m-start" type="time" required />
+            </div>
+            <div class="field third">
+              <label for="m-end">End time *</label>
+              <input id="m-end" type="time" required />
+            </div>
+
+            <div class="field half">
+              <label for="m-location">Location *</label>
+              <select id="m-location" required>
+                <option value="">Select location</option>
+                <option value="helsinki-hq-3">Helsinki HQ – Floor 3</option>
+                <option value="helsinki-hq-2">Helsinki HQ – Floor 2</option>
+                <option value="tampere-office">Tampere Office</option>
+              </select>
+            </div>
+
+            <div class="field half">
+              <label for="m-type">Meeting type</label>
+              <select id="m-type">
+                <option value="onsite">On-site</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="online">Online only</option>
+              </select>
+              <span class="hint">Hybrid / online will include a Teams link in the invite.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: People -->
+        <div class="wizard-step" data-step="2" hidden>
+          <div class="wizard-step-header">
+            <h2>2. Select people</h2>
+            <p>Add internal colleagues and external guests to the meeting.</p>
+          </div>
+
+          <div class="fieldset">
+            <div class="field full">
+              <label for="m-internal">Internal attendees</label>
+              <input id="m-internal" type="text" placeholder="Type a name or email and press Enter" />
+              <span class="hint">Demo only – type a name and press Enter to add to the list.</span>
+              <div class="pill-row" id="internal-pills" aria-label="Internal attendees"></div>
+            </div>
+
+            <div class="field full">
+              <label>External attendees</label>
+              <div class="fieldset">
+                <div class="field half">
+                  <label for="ext-name">Name</label>
+                  <input id="ext-name" type="text" placeholder="Guest name" />
+                </div>
+                <div class="field half">
+                  <label for="ext-email">Email</label>
+                  <input id="ext-email" type="email" placeholder="guest@example.com" />
+                </div>
+                <div class="field full">
+                  <button type="button" class="secondary" id="btn-add-external">Add external attendee</button>
+                </div>
+              </div>
+              <div class="pill-row" id="external-pills" aria-label="External attendees"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Room -->
+        <div class="wizard-step" data-step="3" hidden>
+          <div class="wizard-step-header">
+            <h2>3. Select room</h2>
+            <p>Choose a room that fits your attendees and equipment needs.</p>
+          </div>
+
+          <!-- Simple static room list for demo -->
+          <ul class="room-cards" id="room-list">
+            <li class="room-card" data-room-id="aurora-312">
+              <div class="room-title">Aurora 3.12</div>
+              <div class="room-meta">Helsinki HQ – Floor 3 · Video conferencing · Up to 8 people</div>
+              <div class="room-tags">
+                <span class="room-tag">Video conferencing</span>
+                <span class="room-tag">Projector</span>
+                <span class="room-tag">Whiteboard</span>
+              </div>
+            </li>
+            <li class="room-card" data-room-id="harbor-212">
+              <div class="room-title">Harbor 2.12</div>
+              <div class="room-meta">Helsinki HQ – Floor 2 · Board room · Up to 10 people</div>
+              <div class="room-tags">
+                <span class="room-tag">Board room</span>
+                <span class="room-tag">Video conferencing</span>
+                <span class="room-tag">Large screen</span>
+              </div>
+            </li>
+            <li class="room-card" data-room-id="lake-104">
+              <div class="room-title">Lake 1.04</div>
+              <div class="room-meta">Tampere Office · Client meeting · Up to 6 people</div>
+              <div class="room-tags">
+                <span class="room-tag">Client-friendly</span>
+                <span class="room-tag">Video conferencing</span>
+              </div>
+            </li>
+          </ul>
+          <span class="hint">For demo purposes, these rooms are static. In production, this would show live availability.</span>
+        </div>
+
+        <!-- Step 4: Catering -->
+        <div class="wizard-step" data-step="4" hidden>
+          <div class="wizard-step-header">
+            <h2>4. Order catering</h2>
+            <p>Choose items and set a delivery time relative to the meeting.</p>
+          </div>
+
+          <div class="fieldset">
+            <div class="field half">
+              <label for="catering-provider">Provider</label>
+              <select id="catering-provider">
+                <option value="">No catering</option>
+                <option value="panorama-restaurant">Panorama Restaurant</option>
+                <option value="panorama-cafe">Panorama Café</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label for="catering-delivery-time">Delivery time</label>
+              <input id="catering-delivery-time" type="time" />
+              <span class="hint">Tip: set 10–15 minutes before the meeting starts.</span>
+            </div>
+          </div>
+
+          <div class="fieldset">
+            <div class="field full">
+              <label>Catering items</label>
+              <div class="catering-items">
+                <label class="catering-item">
+                  <div>
+                    <input type="checkbox" value="coffee-tea" class="catering-item-check" />
+                    Coffee &amp; tea service
+                  </div>
+                  <span>Includes coffee, tea, and water.</span>
+                </label>
+                <label class="catering-item">
+                  <div>
+                    <input type="checkbox" value="sandwich-platter" class="catering-item-check" />
+                    Sandwich platter
+                  </div>
+                  <span>Mixed meat and vegetarian options.</span>
+                </label>
+                <label class="catering-item">
+                  <div>
+                    <input type="checkbox" value="fruit-plate" class="catering-item-check" />
+                    Fruit plate
+                  </div>
+                  <span>Seasonal fruit selection.</span>
+                </label>
+                <label class="catering-item">
+                  <div>
+                    <input type="checkbox" value="pastries" class="catering-item-check" />
+                    Morning pastries
+                  </div>
+                  <span>Croissants, buns and gluten-free option.</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="catering-notes">Dietary preferences / notes</label>
+              <textarea id="catering-notes" placeholder="e.g., 2x vegetarian, 1x gluten-free, no nuts"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="wizard-actions">
+          <button type="button" class="secondary" id="btn-cancel" onclick="location.href='index.html'">
+            Cancel
+          </button>
+          <div class="wizard-actions-right">
+            <button type="button" class="secondary" id="btn-prev" disabled>
+              Back
+            </button>
+            <button type="button" class="primary" id="btn-next">
+              Next
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong>Meeting created</strong>
+    <span>Your meeting, room and catering have been requested.</span>
+  </div>
+
+  <script>
+    (function () {
+      let currentStep = 1;
+      const totalSteps = 4;
+
+      const stepElems = document.querySelectorAll('.wizard-step');
+      const stepperItems = document.querySelectorAll('.stepper-item');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const toast = document.getElementById('toast');
+
+      const sumTitle = document.getElementById('sum-title');
+      const sumWhen = document.getElementById('sum-when');
+      const sumLocation = document.getElementById('sum-location');
+      const sumAttendees = document.getElementById('sum-attendees');
+      const sumRoom = document.getElementById('sum-room');
+      const sumCatering = document.getElementById('sum-catering');
+
+      const titleInput = document.getElementById('m-title');
+      const dateInput = document.getElementById('m-date');
+      const startInput = document.getElementById('m-start');
+      const endInput = document.getElementById('m-end');
+      const locInput = document.getElementById('m-location');
+
+      const internalInput = document.getElementById('m-internal');
+      const internalPills = document.getElementById('internal-pills');
+      const externalName = document.getElementById('ext-name');
+      const externalEmail = document.getElementById('ext-email');
+      const externalPills = document.getElementById('external-pills');
+      const btnAddExternal = document.getElementById('btn-add-external');
+
+      const roomList = document.getElementById('room-list');
+      let selectedRoomId = null;
+      let selectedRoomLabel = null;
+
+      const cateringProvider = document.getElementById('catering-provider');
+      const cateringTime = document.getElementById('catering-delivery-time');
+      const cateringChecks = document.querySelectorAll('.catering-item-check');
+
+      const internalAttendees = [];
+      const externalAttendees = [];
+
+      function showStep(step) {
+        currentStep = step;
+
+        stepElems.forEach(el => {
+          el.hidden = Number(el.getAttribute('data-step')) !== step;
+        });
+
+        stepperItems.forEach(item => {
+          const s = Number(item.getAttribute('data-step'));
+          item.classList.toggle('active', s === step);
+          item.classList.toggle('complete', s < step);
+          const badge = item.querySelector('.stepper-badge');
+          if (s < step) {
+            badge.textContent = '✓';
+          } else {
+            badge.textContent = String(s);
+          }
+        });
+
+        btnPrev.disabled = step === 1;
+        btnNext.textContent = step === totalSteps ? 'Create meeting' : 'Next';
+
+        updateSummary();
+      }
+
+      function updateSummary() {
+        // Title
+        sumTitle.textContent = titleInput.value.trim() || 'Untitled meeting';
+
+        // When
+        let when = 'Not set';
+        if (dateInput.value && startInput.value && endInput.value) {
+          const d = new Date(dateInput.value + 'T00:00:00');
+          const dateLabel = isNaN(d)
+            ? dateInput.value
+            : d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+          when = dateLabel + ' · ' + startInput.value + '–' + endInput.value;
+        }
+        sumWhen.textContent = when;
+
+        // Location
+        const locOpt = locInput.options[locInput.selectedIndex];
+        sumLocation.textContent = locOpt && locOpt.value ? locOpt.text : 'Not set';
+
+        // Attendees
+        const total = internalAttendees.length + externalAttendees.length;
+        sumAttendees.textContent = total === 1 ? '1 person' : total + ' people';
+
+        // Room
+        sumRoom.textContent = selectedRoomLabel || 'Not selected';
+
+        // Catering
+        const provider = cateringProvider.value;
+        const items = Array.from(cateringChecks).filter(c => c.checked).map(c => c.value);
+        if (!provider && items.length === 0) {
+          sumCatering.textContent = 'None';
+        } else {
+          const providerLabel = provider === 'panorama-restaurant'
+            ? 'Panorama Restaurant'
+            : provider === 'panorama-cafe'
+              ? 'Panorama Café'
+              : 'Custom provider';
+          const timeLabel = cateringTime.value ? ' at ' + cateringTime.value : '';
+          const itemsLabel = items.length ? (': ' + items.join(', ')) : '';
+          sumCatering.textContent = providerLabel + timeLabel + itemsLabel;
+        }
+      }
+
+      function nextStep() {
+        if (currentStep < totalSteps) {
+          showStep(currentStep + 1);
+        } else {
+          // Fake "create meeting"
+          toast.style.display = 'flex';
+          setTimeout(() => {
+            toast.style.display = 'none';
+            window.location.href = 'index.html#my-day';
+          }, 1800);
+        }
+      }
+
+      function prevStep() {
+        if (currentStep > 1) {
+          showStep(currentStep - 1);
+        }
+      }
+
+      // Internal attendees: add on Enter
+      internalInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const value = internalInput.value.trim();
+          if (!value) return;
+          internalAttendees.push(value);
+          const pill = document.createElement('div');
+          pill.className = 'pill';
+          pill.textContent = value + ' ';
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = '×';
+          btn.addEventListener('click', () => {
+            const idx = internalAttendees.indexOf(value);
+            if (idx > -1) internalAttendees.splice(idx, 1);
+            pill.remove();
+            updateSummary();
+          });
+          pill.appendChild(btn);
+          internalPills.appendChild(pill);
+          internalInput.value = '';
+          updateSummary();
+        }
+      });
+
+      // External attendees
+      btnAddExternal.addEventListener('click', () => {
+        const name = externalName.value.trim();
+        const email = externalEmail.value.trim();
+        if (!name && !email) return;
+        const label = name || email;
+        externalAttendees.push(label);
+        const pill = document.createElement('div');
+        pill.className = 'pill';
+        pill.textContent = label + ' ';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = '×';
+        btn.addEventListener('click', () => {
+          const idx = externalAttendees.indexOf(label);
+          if (idx > -1) externalAttendees.splice(idx, 1);
+          pill.remove();
+          updateSummary();
+        });
+        pill.appendChild(btn);
+        externalPills.appendChild(pill);
+        externalName.value = '';
+        externalEmail.value = '';
+        updateSummary();
+      });
+
+      // Room selection
+      if (roomList) {
+        roomList.addEventListener('click', (e) => {
+          const card = e.target.closest('.room-card');
+          if (!card) return;
+          roomList.querySelectorAll('.room-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedRoomId = card.getAttribute('data-room-id');
+          selectedRoomLabel = card.querySelector('.room-title').textContent;
+          updateSummary();
+        });
+      }
+
+      // Update summary on key inputs
+      [titleInput, dateInput, startInput, endInput, locInput, cateringProvider, cateringTime].forEach(el => {
+        el && el.addEventListener('change', updateSummary);
+      });
+      cateringChecks.forEach(c => c.addEventListener('change', updateSummary));
+
+      btnNext.addEventListener('click', nextStep);
+      btnPrev.addEventListener('click', prevStep);
+
+      showStep(1);
+    })();
+  </script>
+</body>
+</html>
