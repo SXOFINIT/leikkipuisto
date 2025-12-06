@@ -109,6 +109,19 @@
     .secondary:hover {
       background: #f9fafb;
     }
+.home-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Make it stack on mobile */
+@media (max-width: 900px) {
+  .home-two-col {
+    grid-template-columns: 1fr;
+  }
+}
 
     /* Hero */
     .hero {
@@ -241,7 +254,7 @@
       font-size: .92rem;
     }
 
-    /* Services (Quick services) */
+    /* s (Quick s) */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -746,6 +759,20 @@
       color: var(--muted);
       text-align: right;
     }
+    /* Combined layout: Services + My Day side-by-side */
+.home-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 960px) {
+  .home-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -829,91 +856,98 @@
     </section>
 
     <!-- Services -->
-    <section id="services" aria-labelledby="services-title">
-      <h2 id="services-title">Quick services</h2>
-      <p class="section-lead">
-        Start with the most common workplace tasks. You can always come back to see your day and today’s menu.
-      </p>
+    <!-- Services + My Day side by side -->
+<section class="home-main-grid" aria-label="Services and My day">
+  
+  <!-- Services -->
+  <div class="home-two-col">
+  <section id="services" aria-labelledby="services-title">
+    <h2 id="services-title">Quick services</h2>
+    <p class="section-lead">
+      Start with the most common workplace tasks. You can always come back to see your day and today’s menu.
+    </p>
 
-      <div class="card-grid">
-        <article class="card service">
-          <div>
-            <div class="service-eyebrow">Spaces</div>
-            <h3>Book a room</h3>
-            <p>Find and reserve meeting rooms by capacity, equipment, and location.</p>
-          </div>
-          <button class="primary" onclick="location.href='book-room.html'">Start</button>
-        </article>
-
-        <article class="card service">
-          <div>
-            <div class="service-eyebrow">Spaces</div>
-            <h3>Book a desk</h3>
-            <p>Choose a desk near your team, amenities or in a quiet zone for the day.</p>
-          </div>
-          <button class="primary" onclick="location.href='book-desk.html'">Start</button>
-        </article>
-
-        <article class="card service">
-          <div>
-            <div class="service-eyebrow">Meetings</div>
-            <h3>Arrange a meeting</h3>
-            <p>Plan a meeting with room, visitors and services in one flow.</p>
-          </div>
-          <button class="primary" onclick="location.href='arrange-meeting.html'">Start</button>
-        </article>
-
-        <article class="card service">
-          <div>
-            <div class="service-eyebrow">Support</div>
-            <h3>Raise a service request</h3>
-            <p>Report a facility issue or request support from Workplace Services.</p>
-          </div>
-          <button class="primary" onclick="location.href='raise-request.html'">Start</button>
-        </article>
-
-        <article class="card service">
-          <div>
-            <div class="service-eyebrow">Visitors</div>
-            <h3>Register a visitor</h3>
-            <p>Pre-register guests to streamline lobby check-in and badge printing.</p>
-          </div>
-          <button class="primary" onclick="location.href='register-visitor.html'">Start</button>
-        </article>
-      </div>
-    </section>
-
-    <!-- My Day -->
-    <section id="my-day" class="my-day-card" aria-labelledby="myday-title">
-      <div class="my-day-header">
+    <div class="card-grid">
+      <article class="card service">
         <div>
-          <h2 id="myday-title">My day</h2>
-          <p>See today’s bookings, visitors and meetings in one view.</p>
+          <div class="service-eyebrow">Spaces</div>
+          <h3>Book a room</h3>
+          <p>Find and reserve meeting rooms by capacity, equipment, and location.</p>
         </div>
-        <div class="my-day-filter" aria-label="Current view">
-          <span>Today</span> · <span>Office view</span>
+        <button class="primary" onclick="location.href='book-room.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <div>
+          <div class="service-eyebrow">Spaces</div>
+          <h3>Book a desk</h3>
+          <p>Choose a desk near your team, amenities or in a quiet zone for the day.</p>
         </div>
+        <button class="primary" onclick="location.href='book-desk.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <div>
+          <div class="service-eyebrow">Meetings</div>
+          <h3>Arrange a meeting</h3>
+          <p>Plan a meeting with room, visitors and services in one flow.</p>
+        </div>
+        <button class="primary" onclick="location.href='arrange-meeting.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <div>
+          <div class="service-eyebrow">Support</div>
+          <h3>Raise a service request</h3>
+          <p>Report a facility issue or request support from Workplace Services.</p>
+        </div>
+        <button class="primary" onclick="location.href='raise-request.html'">Start</button>
+      </article>
+
+      <article class="card service">
+        <div>
+          <div class="service-eyebrow">Visitors</div>
+          <h3>Register a visitor</h3>
+          <p>Pre-register guests to streamline lobby check-in and badge printing.</p>
+        </div>
+        <button class="primary" onclick="location.href='register-visitor.html'">Start</button>
+      </article>
+    </div>
+  </section>
+
+  <!-- My Day -->
+  <section id="my-day" class="my-day-card" aria-labelledby="myday-title">
+    <div class="my-day-header">
+      <div>
+        <h2 id="myday-title">My day</h2>
+        <p>See today’s bookings, visitors and meetings in one view.</p>
+      </div>
+      <div class="my-day-filter" aria-label="Current view">
+        <span>Today</span> · <span>Office view</span>
+      </div>
+    </div>
+
+    <div class="my-day-columns">
+      <div class="column" aria-label="Bookings">
+        <h3>Room & desk bookings</h3>
+        <ul id="booking-list" class="list"></ul>
       </div>
 
-      <div class="my-day-columns">
-        <div class="column" aria-label="Bookings">
-          <h3>Room & desk bookings</h3>
-          <ul id="booking-list" class="list"></ul>
-        </div>
-
-        <div class="column" aria-label="Visitors">
-          <h3>Visitors</h3>
-          <ul id="visitor-list" class="list"></ul>
-        </div>
-
-        <div class="column" aria-label="Meetings">
-          <h3>Meetings</h3>
-          <ul id="meeting-list" class="list"></ul>
-          <!-- This alert appears when a meeting doesn't have a room -->
-          <div id="meeting-alert" class="alert" role="status" aria-live="polite" hidden></div>
-        </div>
+      <div class="column" aria-label="Visitors">
+        <h3>Visitors</h3>
+        <ul id="visitor-list" class="list"></ul>
       </div>
-    </section>
+
+      <div class="column" aria-label="Meetings">
+        <h3>Meetings</h3>
+        <ul id="meeting-list" class="list"></ul>
+        <div id="meeting-alert" class="alert" role="status" aria-live="polite" hidden></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</section>
 
     <!-- Menu -->
     <section id="menu" class="menu-section" aria-labelledby="menu-title">
@@ -992,3 +1026,4 @@
   </div>
 </body>
 </html>
+
